@@ -13,6 +13,13 @@ public class BCP {
 	public Registradores registradores;
 	public String [] textoPrograma = new String[22];
 
+	public BCP () {
+
+		// Inicializa os registradores com o valor inválido -1
+		this.registradores = new Registradores(-1, -1);
+
+	} 
+
 	public int getEstado () {
 		return this.estado;
 	}
