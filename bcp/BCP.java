@@ -12,7 +12,7 @@ public class BCP {
 	public int prioridade;
 	public int creditos;
 	public Registradores registradores;
-	public String[] textoPrograma = new String[22];
+	public String [] textoPrograma = new String[22];
 
 	public BCP() {
 
@@ -43,6 +43,10 @@ public class BCP {
 
 	public String getLinhaTexto(int numLinha) {
 		return this.textoPrograma[numLinha];
+	}
+
+	public int getContador() {
+		return this.contadorPrograma;
 	}
 
 	public void setEstado(int estado) {
