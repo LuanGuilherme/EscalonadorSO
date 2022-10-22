@@ -7,6 +7,11 @@ public class Escalonador {
 
 	static Logfile log;
 
+    static float troca = 0; // Numero de trocas de processos
+    static float nroProcs = 0; // Numero de processos
+	static float instPorInter = 0; // Numero de instruções por interrupção
+	static float quantaUsados = 0; // Numero de Quanta usados
+
 	public static void main(String[] args) {
 
 		// Cria uma lista ligada de instâncias de BCP (note-se: temos um objeto BCP por
@@ -31,6 +36,8 @@ public class Escalonador {
 			i++;
 
 		}
+
+        nroProcs = i;
 
 		// Atribui os créditos dos processos
 		atribuiCreditos(processos);
@@ -265,6 +272,8 @@ public class Escalonador {
 
 			// Menor ou igual pois j começa em um
 			while (j <= quantum && processosProntos.get(0).getCreditos() >= 0) {
+				
+				instPorInter = instPorInter + j;
 
 				// Lê a j-ésima instrução do processo em execução
 				instrucao = processosProntos.get(0).getLinhaTexto(processosProntos.get(0).contadorPrograma);
@@ -304,6 +313,10 @@ public class Escalonador {
 					else
 						log.addLog("Interrompendo " + processosProntos.get(0).getLinhaTexto(0) + " após " + j + " instruções");
 
+					troca++;
+					quantaUsados += j;
+					
+
 					// Quando há uma E/S, o processo passa para o estado bloqueado
 					processosProntos.get(0).setEstado(-1);
 
@@ -324,6 +337,7 @@ public class Escalonador {
 					log.addLog(processosProntos.get(0).getLinhaTexto(0) + " terminado. X=" + processosProntos.get(0).getRegistradorX() + ". Y=" + processosProntos.get(0).getRegistradorY());
 					processosProntos.remove(0);
 					flag = 0;
+					troca++;
 					break;
 				}
 
@@ -339,7 +353,8 @@ public class Escalonador {
 				// Verifica se o processo executou todos os processos no quantum sem interrupções
 				if (j > quantum)
 					log.addLog("Interrompendo " + processosProntos.get(0).getLinhaTexto(0) + " após " + quantum + " instruções");
-
+					troca++;
+					quantaUsados += 3;
 			}
 
 			// Ao terminar a execução dos quanta de um processo, reordena 
@@ -347,9 +362,11 @@ public class Escalonador {
 
 			// Atualiza os program countings dos processos bloqueados
 			verificaBloqueados(processosBloqueados, processosProntos);
-
+            
 		}
 
+        log.addLog("MEDIA DE TROCAS: " + (troca/nroProcs) + " \n" + "MEDIA DE INSTRUCOES: " + (instPorInter/quantaUsados) + " \n" + "QUANTUM: " + quantum);
+            
 	}
 
 }
