@@ -273,7 +273,6 @@ public class Escalonador {
 			// Menor ou igual pois j começa em um
 			while (j <= quantum && processosProntos.get(0).getCreditos() >= 0) {
 				
-				instPorInter = instPorInter + j;
 
 				// Lê a j-ésima instrução do processo em execução
 				instrucao = processosProntos.get(0).getLinhaTexto(processosProntos.get(0).contadorPrograma);
@@ -313,8 +312,10 @@ public class Escalonador {
 					else
 						log.addLog("Interrompendo " + processosProntos.get(0).getLinhaTexto(0) + " após " + j + " instruções");
 
+					
 					troca++;
-					quantaUsados += j;
+					quantaUsados++;
+					instPorInter = instPorInter + j;
 					
 
 					// Quando há uma E/S, o processo passa para o estado bloqueado
@@ -338,6 +339,8 @@ public class Escalonador {
 					processosProntos.remove(0);
 					flag = 0;
 					troca++;
+					quantaUsados++;
+					instPorInter++;
 					break;
 				}
 
@@ -354,7 +357,8 @@ public class Escalonador {
 				if (j > quantum)
 					log.addLog("Interrompendo " + processosProntos.get(0).getLinhaTexto(0) + " após " + quantum + " instruções");
 					troca++;
-					quantaUsados += 3;
+					quantaUsados++;
+					instPorInter = instPorInter + quantum;
 			}
 
 			// Ao terminar a execução dos quanta de um processo, reordena 
@@ -364,7 +368,7 @@ public class Escalonador {
 			verificaBloqueados(processosBloqueados, processosProntos);
             
 		}
-
+     
         log.addLog("MEDIA DE TROCAS: " + (troca/nroProcs) + " \n" + "MEDIA DE INSTRUCOES: " + (instPorInter/quantaUsados) + " \n" + "QUANTUM: " + quantum);
             
 	}
